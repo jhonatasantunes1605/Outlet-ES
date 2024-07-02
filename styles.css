@@ -1,0 +1,334 @@
+/* Estilos gerais */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: #e0e0e0;
+    margin: 0;
+    padding-top: 100px; /* Ajuste conforme necessário para dar espaço ao cabeçalho */
+}
+
+/* Cabeçalho */
+header {
+    background-color: #282828; /* Cor de fundo moderna */
+    color: #fff;
+    padding: 60px 80px; /* Redução do padding para um visual mais compacto */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra mais suave */
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    
+}
+
+.logo img {
+    width: 60px; /* Tamanho do logo ajustado */
+    height: auto;
+    margin-right: 10px;
+}
+
+.title {
+    font-size: 24px;
+    margin-top: 5px;
+    color: #fff;
+}
+
+
+.filters select,
+.filters input {
+    padding: 10px 1px; /* Ajuste do padding */
+    border-radius: 20px; /* Bordas mais arredondadas para um visual moderno */
+    border: none; /* Remoção da borda padrão */
+    background-color: #383838; /* Cor de fundo moderna */
+    color: #ffffff; /* Cor do texto */
+    font-size: 14px;
+    transition: background-color 0.3s, box-shadow 0.3s; /* Transições suaves */
+}
+
+.filters select:focus,
+.filters input:focus {
+    outline: none; /* Remoção do outline padrão */
+    background-color: #505050; /* Cor de fundo ao focar */
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); /* Sombra ao focar */
+}
+
+.filters select {
+    min-width: 150px; /* Largura mínima ajustada */
+}
+
+
+/* Estilos para dispositivos móveis */
+@media (max-width: 600px) {
+    header {
+        padding: 10px; /* Ajuste o padding conforme necessário para dispositivos móveis */
+    }
+
+    .logo img {
+        width: 60px; /* Redimensione o logo para telas menores */
+    }
+
+    .title {
+        font-size: 20px; /* Reduza o tamanho do título para telas menores */
+    }
+
+    .filters {
+        flex-direction: column; /* Organize os filtros verticalmente */
+        align-items: flex-start; /* Alinhe os filtros à esquerda */
+        margin-top: 10px; /* Espaçamento acima dos filtros */
+    }
+
+    .filters select,
+    .filters input {
+        width: 100%; /* Garanta que os elementos ocupem a largura total */
+        margin: 5px 0; /* Ajuste o espaçamento entre os elementos */
+    }
+}
+
+/* Cards de Produtos */
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 80px; /* Ajuste a margem superior para dar espaço ao cabeçalho fixo ou sticky */
+    margin-bottom: 20px; /* Ajuste opcional para margem inferior */
+}
+
+.card {
+    background-color: #ffffff; /* Cor de fundo branco */
+    border-radius: 10px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* Sombra mais pronunciada para efeito de flutuação */
+    margin: 40px;
+    padding: 20px;
+    width: 250px;
+    text-align: center;
+    color: #8e8d8d; /* Cor do texto preto */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transições suaves para efeito de flutuação */
+}
+
+/* Star indicator */
+.star-indicator {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    font-size: 1em;
+    color: gold;
+}
+.super-promo-badge {
+    position: absolute;
+    top: -5px;
+    left: -4px;
+    background-color: #ff9800;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+}
+
+
+.card:hover {
+    transform: translateY(-10px); /* Move o cartão para cima ao passar o mouse */
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3); /* Aumenta a sombra ao passar o mouse */
+}
+
+.card h2 {
+    font-size: 20px;
+    margin: 10px 0;
+    color: #8e8d8d; /* Cor do texto preto */
+}
+
+.card p {
+    margin: 5px 0;
+    color: #8e8d8d; /* Cor do texto preto */
+}
+
+.card .price {
+    font-size: 30px;
+    font-weight: bold;
+    color: #007e00; /* Cor do texto preto */
+}
+
+.card img {
+    max-width: 100%;
+    height: auto;
+    border-bottom: 1px solid #444;
+    margin-bottom: 10px;
+}
+
+.sold {
+    color: red !important; /* Cor do texto vermelho */
+    font-weight: bold;
+    font-size: 30px;
+}
+
+.button-container {
+    margin-top: 10px;
+}
+
+button {
+    background-color: #008b15;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #18c237;
+}
+
+.sold {
+    color: red;
+    font-weight: bold;
+}
+
+/* Botões de paginação */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+/* Botões de paginação */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 0;
+    flex-wrap: wrap; /* Permite que os botões quebrem linha em telas menores */
+}
+
+.pagination li {
+    margin: 5px; /* Ajuste das margens para melhor espaçamento em telas menores */
+}
+
+.pagination button {
+    padding: 10px 15px;
+    border: 2px solid #282828; /* Borda moderna */
+    border-radius: 50%; /* Botões redondos */
+    background-color: #fff; /* Fundo branco */
+    color: #282828; /* Texto escuro */
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s; /* Transições suaves */
+}
+
+.pagination button:hover {
+    background-color: #282828; /* Fundo escuro ao passar o mouse */
+    color: #fff; /* Texto branco ao passar o mouse */
+    border-color: #ffffff; /* Borda verde ao passar o mouse */
+}
+
+.pagination .active button {
+    background-color: #4CAF50; /* Fundo verde para o botão ativo */
+    color: white;
+    border-color: #4CAF50;
+}
+
+/* Rodapé */
+footer {
+    background-color: #282828;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+/* Modais */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 101; /* Z-index maior do que o cabeçalho */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding-top: 60px; /* Ajuste conforme necessário para garantir que o modal apareça abaixo do cabeçalho */
+}
+
+.modal-content {
+    background-color: #1f1f1f;
+    margin: 10% auto;
+    padding: 20px;
+    border: 2px solid #444;
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+    border-radius: 15px;
+}
+
+.modal-content input,
+.modal-content textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background-color: #121212;
+    color: #e0e0e0;
+    font-size: 16px;
+    box-sizing: border-box; /* Inclui padding e border na largura total */
+}
+
+.modal-content textarea {
+    height: 100px; /* Altura do textarea */
+    resize: none; /* Impede redimensionamento do textarea */
+}
+
+.modal-content button {
+    background-color: #062756;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.modal-content button:hover {
+    background-color: #477cd1;
+}
+
+#successModal .modal-content {
+    background-color: #1f1f1f;
+    margin: 10% auto;
+    padding: 20px;
+    border: 2px solid #444;
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+    border-radius: 15px;
+}
+
+#successModal .modal-content a {
+    color: #18c237;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#successModal .modal-content a:hover {
+    text-decoration: underline;
+}
+
+
+.card {
+    position: relative; /* Ensure the card is positioned relative to its container */
+    /* Other styles */
+}
