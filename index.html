@@ -351,7 +351,7 @@
         // Function to mark a product as sold
          // Function to mark a product as sold
         function markAsSold(ean) {
-            const soldProduct = filteredProducts.find(prod => prod[1] === ean);
+            const soldProduct = filteredProducts.find(prod => prod[4] === ean);
             if (soldProduct) {
                 soldProduct[6] = 'Vendido'; // Atualiza o status localmente para evitar múltiplas reservas
             }
