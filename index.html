@@ -52,25 +52,15 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- For the search icon -->
     <script>
         let currentPage = 1;
         const itemsPerPage = 8;
         let filteredProducts = [];
         let selectedProduct = null;
-        let debounceTimeout = null;
 
-        // Função para buscar produtos com cache local
-        async function fetchProdutosWithCache(selectedTipo, searchQuery, priceSort, page = 1) {
-            const cacheKey = `produtos_${selectedTipo}_${searchQuery}_${priceSort}`;
-            const cachedData = sessionStorage.getItem(cacheKey);
-
-            if (cachedData) {
-                console.log("Dados carregados do cache");
-                updatePagination(JSON.parse(cachedData), page);
-                return;
-            }
-
+        // Fetch products and apply filters and sorting
+        async function fetchProdutos(selectedTipo, searchQuery, priceSort, page = 1) {
             try {
                 const response = await fetch('https://sheets.googleapis.com/v4/spreadsheets/1_ODPEKD1yor2wjFncaYEp7B5CVFmXRuiEwyOjcqOwcM/values/Produtos!A1:L1000?key=AIzaSyAIB-qCRdOAgEJYuPAxNTEsoR2Ijt33-TE');
                 const data = await response.json();
@@ -90,31 +80,31 @@
                     soldMap.set(item.ean, item.status);
                 });
 
-                // Processamento local dos produtos
                 filteredProducts = produtos.filter(produto => {
+                    const nomeProduto = produto[2].toLowerCase();
+                    const searchQueryLower = searchQuery.toLowerCase();
                     const isSold = soldMap.get(produto[1]) === 'Vendido';
                     produto[6] = isSold ? 'Vendido' : produto[6];
                     return produto[6] === "ADICIONADO PARA VENDA" &&
-                        (selectedTipo === 'Todos' || produto[3] === selectedTipo) &&
-                        produto[2].toLowerCase().includes(searchQuery.toLowerCase());
+                           (selectedTipo === 'Todos' || produto[3] === selectedTipo) &&
+                           nomeProduto.includes(searchQueryLower);
                 });
 
                 if (priceSort === 'asc') {
-                    filteredProducts.sort((a, b) => parseFloat(a[7].replace('R$', '').replace('.', '').replace(',', '.')) - parseFloat(b[7].replace('R$', '').replace('.', '').replace(',', '.')));
+                    filteredProducts.sort((a, b) => parseFloat(a[7].replace('R$', '').replace('.', '').replace(',', '.')) -
+                                                      parseFloat(b[7].replace('R$', '').replace('.', '').replace(',', '.')));
                 } else if (priceSort === 'promo') {
                     filteredProducts = filteredProducts.filter(produto => produto[10] === 'SIM');
                 }
 
-                // Armazenar os produtos no cache
-                sessionStorage.setItem(cacheKey, JSON.stringify(filteredProducts));
                 updatePagination(filteredProducts, page);
-
             } catch (error) {
                 console.error('Erro ao buscar dados da planilha:', error);
                 alert('Erro ao buscar dados da planilha. Por favor, tente novamente.');
             }
         }
 
+        // Handle pagination and display of products
         function updatePagination(products, page) {
             const totalItems = products.length;
             const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -133,13 +123,12 @@
 
             const pagination = document.getElementById('pagination');
             pagination.innerHTML = '';
-
             for (let i = 1; i <= totalPages; i++) {
                 const button = document.createElement('button');
                 button.textContent = i;
                 button.onclick = () => {
                     updatePagination(products, i);
-                    scrollToTop(); // Rola para o topo após mudar a página
+                    scrollToTop();
                 };
                 if (i === currentPage) {
                     button.classList.add('active');
@@ -148,13 +137,12 @@
             }
         }
 
+        // Scroll to top of page
         function scrollToTop() {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // Create product card
         function createProductCard(produto) {
             const card = document.createElement('div');
             card.className = 'card';
@@ -213,131 +201,108 @@
             }
 
             card.appendChild(buttonContainer);
+            return card;
+        }
 
-    // Add star indicator based on column L
-    if (produto[11]) {
-        const starIndicator = document.createElement('div');
-        starIndicator.className = 'star-indicator';
-        starIndicator.textContent = '⭐'.repeat(parseInt(produto[11])); // Adjust the number of stars based on column L
-        card.appendChild(starIndicator);
-    }
-
-    return card;
-}
-
+        // Filter and search handlers
         function handleFilterChange() {
             const selectedTipo = document.getElementById('tipoSelect').value;
             const searchQuery = document.getElementById('searchInput').value;
             const priceSort = document.getElementById('priceSortSelect').value;
-            fetchProdutosWithCache(selectedTipo, searchQuery, priceSort);
+            fetchProdutos(selectedTipo, searchQuery, priceSort, currentPage);
         }
 
-        // Função para lidar com debounce na busca
         function handleSearch() {
-            clearTimeout(debounceTimeout);
-            debounceTimeout = setTimeout(() => {
-                handleFilterChange();
-            }, 300); // 300ms de atraso para otimizar o número de chamadas
+            const selectedTipo = document.getElementById('tipoSelect').value;
+            const searchQuery = document.getElementById('searchInput').value;
+            const priceSort = document.getElementById('priceSortSelect').value;
+            fetchProdutos(selectedTipo, searchQuery, priceSort, currentPage);
         }
 
+        // Open modal for product reservation
         function openModal(produto, card) {
             selectedProduct = { produto, card };
             document.getElementById('reservationModal').style.display = 'block';
         }
 
+        // Close reservation modal
         function closeModal() {
             document.getElementById('reservationModal').style.display = 'none';
         }
 
+        // Close success modal
         function closeSuccessModal() {
             document.getElementById('successModal').style.display = 'none';
         }
-        
-function markAsSold(ean) {
-    // Localiza o card do produto e atualiza o status para 'Vendido'
-    const card = selectedProduct.card;
-    const buttonContainer = card.querySelector('.button-container');
-    buttonContainer.innerHTML = '';
 
-    const soldText = document.createElement('p');
-    soldText.className = 'sold';
-    soldText.textContent = 'Vendido';
-    buttonContainer.appendChild(soldText);
+        // Function to submit the reservation
+        async function submitReservation() {
+            const fullName = document.getElementById('fullName').value;
+            const cpf = document.getElementById('cpf').value;
+            const email = document.getElementById('email').value;
+            const company = document.getElementById('company').value;
+            const address = document.getElementById('address').value;
 
-    const situacao = card.querySelector('p:nth-child(5)');
-    situacao.textContent = 'Situação: Vendido';
-}
-
-// Função para enviar a reserva do produto
-async function submitReservation() {
-    const fullName = document.getElementById('fullName').value;
-    const cpf = document.getElementById('cpf').value;
-    const email = document.getElementById('email').value;
-    const company = document.getElementById('company').value;
-    const address = document.getElementById('address').value;
-
-    if (!fullName || !cpf || !email || !company || !address) {
-        alert('Por favor, preencha todos os campos.');
-        return;
-    }
-
-    try {
-        const response = await axios.post('https://parseapi.back4app.com/classes/Produtos', {
-            nome: fullName,
-            cpf: cpf,
-            email: email,
-            empresa: company,
-            endereco: address,
-            produto: selectedProduct.produto[2],
-            ean: selectedProduct.produto[1],
-            tipo: selectedProduct.produto[3],
-            codigo: selectedProduct.produto[4],
-            status: 'Vendido'
-        }, {
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Parse-Application-Id': '1WzazzMciNH2dmPTjfGrSXOt4tVMsLp849DtX6YU',
-                'X-Parse-REST-API-Key': 'QCmYv8iVNOkHYkRh6Cvd00XfBZ7PkVeowrpsEgrU'
+            if (!fullName || !cpf || !email || !company || !address) {
+                alert('Por favor, preencha todos os campos.');
+                return;
             }
-        });
 
-        // Chama a função markAsSold para atualizar a interface
-        markAsSold(selectedProduct.produto[1]);
-        closeModal();
-        showSuccessModal(selectedProduct.produto[2], selectedProduct.produto[4]);
-    } catch (error) {
-        console.error('Erro ao enviar reserva:', error);
-        alert('Erro ao enviar reserva. Por favor, tente novamente.');
-    }
-}
-
-        function fillTipoFilter() {
-            // Função para preencher o filtro de tipo com os tipos de produtos únicos
-            fetch('https://sheets.googleapis.com/v4/spreadsheets/1_ODPEKD1yor2wjFncaYEp7B5CVFmXRuiEwyOjcqOwcM/values/Produtos!D2:D1000?key=AIzaSyAIB-qCRdOAgEJYuPAxNTEsoR2Ijt33-TE')
-                .then(response => response.json())
-                .then(data => {
-                    const tipoSet = new Set();
-                    data.values.forEach(row => {
-                        tipoSet.add(row[0]);
-                    });
-
-                    const tipoSelect = document.getElementById('tipoSelect');
-                    tipoSet.forEach(tipo => {
-                        const option = document.createElement('option');
-                        option.value = tipo;
-                        option.textContent = tipo;
-                        tipoSelect.appendChild(option);
-                    });
-                })
-                .catch(error => {
-                    console.error('Erro ao buscar tipos de produtos:', error);
+            try {
+                const response = await axios.post('https://parseapi.back4app.com/classes/Produtos', {
+                    nome: fullName,
+                    cpf: cpf,
+                    email: email,
+                    empresa: company,
+                    endereco: address,
+                    produto: selectedProduct.produto[2],
+                    ean: selectedProduct.produto[1],
+                    tipo: selectedProduct.produto[3],
+                    codigo: selectedProduct.produto[4],
+                    status: 'Vendido'
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Parse-Application-Id': '1WzazzMciNH2dmPTjfGrSXOt4tVMsLp849DtX6YU',
+                        'X-Parse-REST-API-Key': 'QCmYv8iVNOkHYkRh6Cvd00XfBZ7PkVeowrpsEgrU'
+                    }
                 });
+
+                markAsSold(selectedProduct.produto[1]);
+                closeModal();
+
+                console.log('Chamada da função showSuccessModal');
+                showSuccessModal(selectedProduct.produto[2], selectedProduct.produto[4]);
+            } catch (error) {
+                console.error('Erro ao enviar reserva:', error);
+                alert('Erro ao enviar reserva. Por favor, tente novamente.');
+            }
         }
 
-        window.onload = () => {
-            fetchProdutosWithCache('Todos', '', 'default');
-            fillTipoFilter();
-        };
+        // Function to mark a product as sold
+        function markAsSold(ean) {
+            const soldProduct = filteredProducts.find(prod => prod[1] === ean);
+            if (soldProduct) {
+                soldProduct[6] = 'Vendido'; // Atualiza o status localmente para evitar múltiplas reservas
+            }
+            updatePagination(filteredProducts, currentPage); // Atualiza a lista de produtos na página atual
+        }
+
+        // Function to show the success modal with WhatsApp link
+        function showSuccessModal(productName, productCode) {
+            const modal = document.getElementById('successModal');
+            const whatsappLink = document.getElementById('whatsappLink');
+            const message = `Olá, gostaria de finalizar a compra do produto ${productName} com código ${productCode}.`;
+
+            // Link direto para conversa no WhatsApp com mensagem pré-preenchida
+            whatsappLink.href = `https://api.whatsapp.com/send?phone=47984979368&text=${encodeURIComponent(message)}`;
+            modal.style.display = 'block';
+        }
+
+        // Fetch products on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchProdutos('Todos', '', 'default');
+        });
     </script>
 </body>
 </html>
