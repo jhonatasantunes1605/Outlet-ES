@@ -17,7 +17,6 @@
             <input type="text" id="searchInput" placeholder="Buscar por nome..." oninput="handleSearch()" aria-label="Buscar por nome">
             <select id="tipoSelect" onchange="handleFilterChange()" aria-label="Filtrar por tipo">
                 <option value="Todos">Todos</option>
-                <!-- Categorias serão preenchidas dinamicamente -->
             </select>
             <select id="priceSortSelect" onchange="handleFilterChange()" aria-label="Ordenar por preço">
                 <option value="default">Ordenar por</option>
@@ -58,18 +57,14 @@
         let currentPage = 1;
         const itemsPerPage = 8;
         let filteredProducts = [];
-        let allProducts = [];
         let selectedProduct = null;
 
-        // Fetch products and populate filter options
+        // Fetch products and apply filters and sorting
         async function fetchProdutos(selectedTipo, searchQuery, priceSort, page = 1) {
             try {
                 const response = await fetch('https://sheets.googleapis.com/v4/spreadsheets/1_ODPEKD1yor2wjFncaYEp7B5CVFmXRuiEwyOjcqOwcM/values/Produtos!A1:L1000?key=AIzaSyAIB-qCRdOAgEJYuPAxNTEsoR2Ijt33-TE');
                 const data = await response.json();
-                const produtos = data.values.slice(1); // Remove header row
-
-                // Save all products to filter by categories later
-                allProducts = produtos;
+                const produtos = data.values.slice(1);
 
                 const soldResponse = await axios.get('https://parseapi.back4app.com/classes/Produtos', {
                     headers: {
@@ -78,14 +73,13 @@
                         'X-Parse-REST-API-Key': 'QCmYv8iVNOkHYkRh6Cvd00XfBZ7PkVeowrpsEgrU'
                     }
                 });
-
                 const soldData = soldResponse.data.results;
+
                 const soldMap = new Map();
                 soldData.forEach(item => {
                     soldMap.set(item.ean, item.status);
                 });
 
-                // Filter products based on search, type, and availability status
                 filteredProducts = produtos.filter(produto => {
                     const nomeProduto = produto[2].toLowerCase();
                     const searchQueryLower = searchQuery.toLowerCase();
@@ -96,7 +90,6 @@
                            nomeProduto.includes(searchQueryLower);
                 });
 
-                // Sort products if needed
                 if (priceSort === 'asc') {
                     filteredProducts.sort((a, b) => parseFloat(a[7].replace('R$', '').replace('.', '').replace(',', '.')) -
                                                       parseFloat(b[7].replace('R$', '').replace('.', '').replace(',', '.')));
@@ -104,28 +97,11 @@
                     filteredProducts = filteredProducts.filter(produto => produto[10] === 'SIM');
                 }
 
-                // Populate category filter
-                populateCategoryOptions(allProducts);
                 updatePagination(filteredProducts, page);
             } catch (error) {
                 console.error('Erro ao buscar dados da planilha:', error);
                 alert('Erro ao buscar dados da planilha. Por favor, tente novamente.');
             }
-        }
-
-        // Populate category options dynamically
-        function populateCategoryOptions(produtos) {
-            const uniqueCategories = Array.from(new Set(produtos.map(produto => produto[3]))); // Column 3 contains categories
-            const tipoSelect = document.getElementById('tipoSelect');
-            
-            // Clear previous options and add new ones
-            tipoSelect.innerHTML = '<option value="Todos">Todos</option>';
-            uniqueCategories.forEach(category => {
-                const option = document.createElement('option');
-                option.value = category;
-                option.textContent = category;
-                tipoSelect.appendChild(option);
-            });
         }
 
         // Handle pagination and display of products
@@ -203,16 +179,24 @@
 
             const buttonContainer = document.createElement('div');
             buttonContainer.className = 'button-container';
-            const reserveButton = document.createElement('button');
-            reserveButton.textContent = produto[6] === 'Vendido' ? 'Vendido' : 'Reservar';
-            reserveButton.disabled = produto[6] === 'Vendido';
-            reserveButton.onclick = () => openModal(produto, card);
-            buttonContainer.appendChild(reserveButton);
 
+            if (produto[6] === 'Vendido') {
+                const soldText = document.createElement('p');
+                soldText.className = 'sold';
+                soldText.textContent = 'Vendido';
+                buttonContainer.appendChild(soldText);
+            } else {
+                const reservarButton = document.createElement('button');
+                reservarButton.textContent = 'Reservar';
+                reservarButton.onclick = () => openModal(produto, card);
+                buttonContainer.appendChild(reservarButton);
+            }
+
+            // Add Super Promoção badge if marked as "SIM" in column K
             if (produto[10] === 'SIM') {
-                const superPromoBadge = document.createElement('span');
+                const superPromoBadge = document.createElement('div');
                 superPromoBadge.className = 'super-promo-badge';
-                superPromoBadge.textContent = 'SUPER PROMOÇÃO';
+                superPromoBadge.textContent = 'Super Promoção';
                 card.appendChild(superPromoBadge);
             }
 
@@ -286,6 +270,8 @@
 
                 markAsSold(selectedProduct.produto[1]);
                 closeModal();
+
+                console.log('Chamada da função showSuccessModal');
                 showSuccessModal(selectedProduct.produto[2], selectedProduct.produto[4]);
             } catch (error) {
                 console.error('Erro ao enviar reserva:', error);
