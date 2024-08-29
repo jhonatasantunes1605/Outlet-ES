@@ -254,51 +254,48 @@
         }
 
         async function submitReservation() {
-            const fullName = document.getElementById('fullName').value;
-            const cpf = document.getElementById('cpf').value;
-            const email = document.getElementById('email').value;
-            const company = document.getElementById('company').value;
-            const address = document.getElementById('address').value;
+    const fullName = document.getElementById('fullName').value;
+    const cpf = document.getElementById('cpf').value;
+    const email = document.getElementById('email').value;
+    const company = document.getElementById('company').value;
+    const address = document.getElementById('address').value;
 
-            if (!fullName || !cpf || !email || !company || !address) {
-                alert('Por favor, preencha todos os campos!');
-                return;
+    // Verifica se todos os campos obrigatórios foram preenchidos
+    if (!fullName || !cpf || !email || !company || !address) {
+        alert('Por favor, preencha todos os campos.');
+        return;
+    }
+
+    try {
+        // Envia os dados da reserva para o banco de dados
+        const response = await axios.post('https://parseapi.back4app.com/classes/Produtos', {
+            nome: fullName,
+            cpf: cpf,
+            email: email,
+            empresa: company,
+            endereco: address,
+            produto: selectedProduct.produto[2], // Nome do produto
+            ean: selectedProduct.produto[1], // Código do produto (EAN)
+            tipo: selectedProduct.produto[3], // Tipo do produto
+            codigo: selectedProduct.produto[4], // Código interno do produto
+            status: 'Vendido' // Marca o status do produto como "Vendido"
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Parse-Application-Id': '1WzazzMciNH2dmPTjfGrSXOt4tVMsLp849DtX6YU',
+                'X-Parse-REST-API-Key': 'QCmYv8iVNOkHYkRh6Cvd00XfBZ7PkVeowrpsEgrU'
             }
+        });
 
-            try {
-                const reservationData = {
-                    nome: fullName,
-                    cpf: cpf,
-                    email: email,
-                    empresa: company,
-                    endereco: address,
-                    ean: selectedProduct.produto[1],
-                };
-
-                await axios.post('https://parseapi.back4app.com/classes/Produtos', reservationData, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Parse-Application-Id': '1WzazzMciNH2dmPTjfGrSXOt4tVMsLp849DtX6YU',
-                        'X-Parse-REST-API-Key': 'QCmYv8iVNOkHYkRh6Cvd00XfBZ7PkVeowrpsEgrU'
-                    }
-                });
-
-                closeModal();
-                document.getElementById('successModal').style.display = 'block';
-
-                // Atualize o estado do produto localmente sem recarregar todos os dados
-                const card = selectedProduct.card;
-                const soldText = document.createElement('p');
-                soldText.className = 'sold';
-                soldText.textContent = 'Vendido';
-                card.querySelector('.button-container').innerHTML = '';
-                card.querySelector('.button-container').appendChild(soldText);
-
-            } catch (error) {
-                console.error('Erro ao reservar o produto:', error);
-                alert('Erro ao reservar o produto. Por favor, tente novamente.');
-            }
-        }
+        // Marca o produto como vendido na interface e exibe o modal de sucesso
+        markAsSold(selectedProduct.produto[1]);
+        closeModal();
+        showSuccessModal(selectedProduct.produto[2], selectedProduct.produto[4]);
+    } catch (error) {
+        console.error('Erro ao enviar reserva:', error);
+        alert('Erro ao enviar reserva. Por favor, tente novamente.');
+    }
+}
 
         function fillTipoFilter() {
             // Função para preencher o filtro de tipo com os tipos de produtos únicos
