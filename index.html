@@ -89,50 +89,50 @@
 
         // Fetch products and apply filters and sorting
         async function fetchProdutos(selectedTipo, searchQuery, priceSort, page = 1) {
-            try {
-                const response = await fetch('https://sheets.googleapis.com/v4/spreadsheets/1_ODPEKD1yor2wjFncaYEp7B5CVFmXRuiEwyOjcqOwcM/values/Produtos!A1:L1000?key=AIzaSyAIB-qCRdOAgEJYuPAxNTEsoR2Ijt33-TE');
-                const data = await response.json();
-                const produtos = data.values.slice(1);
+    try {
+        const response = await fetch('https://sheets.googleapis.com/v4/spreadsheets/1_ODPEKD1yor2wjFncaYEp7B5CVFmXRuiEwyOjcqOwcM/values/Produtos!A1:L1000?key=AIzaSyAIB-qCRdOAgEJYuPAxNTEsoR2Ijt33-TE');
+        const data = await response.json();
+        const produtos = data.values.slice(1);
 
-                allProducts = produtos;
+        allProducts = produtos;
 
-                const soldResponse = await axios.get('https://parseapi.back4app.com/classes/Produtos', {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Parse-Application-Id': '1WzazzMciNH2dmPTjfGrSXOt4tVMsLp849DtX6YU',
-                        'X-Parse-REST-API-Key': 'QCmYv8iVNOkHYkRh6Cvd00XfBZ7PkVeowrpsEgrU'
-                    }
-                });
-                const soldData = soldResponse.data.results;
-
-                const soldMap = new Map();
-                soldData.forEach(item => {
-                    soldMap.set(item.ean, item.status);
-                });
-
-                filteredProducts = produtos.filter(produto => {
-                    const nomeProduto = produto[2].toLowerCase();
-                    const searchQueryLower = searchQuery.toLowerCase();
-                    const isSold = soldMap.get(produto[1]) === 'Vendido';
-                    produto[6] = isSold ? 'Vendido' : produto[6];
-                    return produto[6] === "ADICIONADO PARA VENDA" &&
-                           (selectedTipo === 'Todos' || produto[3] === selectedTipo) &&
-                           nomeProduto.includes(searchQueryLower);
-                });
-
-                if (priceSort === 'asc') {
-                    filteredProducts.sort((a, b) => parseFloat(a[7].replace('R$', '').replace('.', '').replace(',', '.')) -
-                                                      parseFloat(b[7].replace('R$', '').replace('.', '').replace(',', '.')));
-                } else if (priceSort === 'promo') {
-                    filteredProducts = filteredProducts.filter(produto => produto[10] === 'SIM');
-                }
-                populateCategoryOptions(allProducts);
-                updatePagination(filteredProducts, page);
-            } catch (error) {
-                console.error('Erro ao buscar dados da planilha:', error);
-                alert('Erro ao buscar dados da planilha. Por favor, tente novamente.');
+        const soldResponse = await axios.get('https://parseapi.back4app.com/classes/Produtos', {
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Parse-Application-Id': '1WzazzMciNH2dmPTjfGrSXOt4tVMsLp849DtX6YU',
+                'X-Parse-REST-API-Key': 'QCmYv8iVNOkHYkRh6Cvd00XfBZ7PkVeowrpsEgrU'
             }
+        });
+        const soldData = soldResponse.data.results;
+
+        const soldMap = new Map();
+        soldData.forEach(item => {
+            soldMap.set(item.codigo, item.status); // Use "codigo" instead of "ean"
+        });
+
+        filteredProducts = produtos.filter(produto => {
+            const nomeProduto = produto[2].toLowerCase();
+            const searchQueryLower = searchQuery.toLowerCase();
+            const isSold = soldMap.get(produto[4]) === 'Vendido'; // Check by "codigo"
+            produto[6] = isSold ? 'Vendido' : produto[6];
+            return produto[6] === "ADICIONADO PARA VENDA" &&
+                   (selectedTipo === 'Todos' || produto[3] === selectedTipo) &&
+                   nomeProduto.includes(searchQueryLower);
+        });
+
+        if (priceSort === 'asc') {
+            filteredProducts.sort((a, b) => parseFloat(a[7].replace('R$', '').replace('.', '').replace(',', '.')) -
+                                              parseFloat(b[7].replace('R$', '').replace('.', '').replace(',', '.')));
+        } else if (priceSort === 'promo') {
+            filteredProducts = filteredProducts.filter(produto => produto[10] === 'SIM');
         }
+        populateCategoryOptions(allProducts);
+        updatePagination(filteredProducts, page);
+    } catch (error) {
+        console.error('Erro ao buscar dados da planilha:', error);
+        alert('Erro ao buscar dados da planilha. Por favor, tente novamente.');
+    }
+}
         function populateCategoryOptions(produtos) {
             const uniqueCategories = Array.from(new Set(produtos.map(produto => produto[3]))); // Column 3 contains categories
             const tipoSelect = document.getElementById('tipoSelect');
@@ -351,15 +351,13 @@
         // Function to mark a product as sold
          // Function to mark a product as sold
         function markAsSold(codigo) {
-    // Atualiza o status localmente sem remover o produto da lista
-    const soldProduct = filteredProducts.find(prod => prod[4] === codigo); // Verifica pelo código
+    const soldProduct = filteredProducts.find(prod => prod[4] === codigo); // Check by "codigo"
     if (soldProduct) {
-        soldProduct[6] = 'Vendido';
+        soldProduct[6] = 'Vendido'; // Atualiza o status localmente para evitar múltiplas reservas
     }
-
-    // Atualiza a exibição dos produtos na página atual
-    updatePagination(filteredProducts, currentPage);
+    updatePagination(filteredProducts, currentPage); // Atualiza a lista de produtos na página atual
 }
+
 
 
         // Function to show the success modal with WhatsApp link
