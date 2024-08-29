@@ -254,52 +254,49 @@
         }
 
         async function submitReservation() {
-            const fullName = document.getElementById('fullName').value;
-            const cpf = document.getElementById('cpf').value;
-            const email = document.getElementById('email').value;
-            const company = document.getElementById('company').value;
-            const address = document.getElementById('address').value;
+    const fullName = document.getElementById('fullName').value;
+    const cpf = document.getElementById('cpf').value;
+    const email = document.getElementById('email').value;
+    const company = document.getElementById('company').value;
+    const address = document.getElementById('address').value;
 
-            if (!fullName || !cpf || !email || !company || !address) {
-                alert('Por favor, preencha todos os campos!');
-                return;
+    if (!fullName || !cpf || !email || !company || !address) {
+        alert('Por favor, preencha todos os campos.');
+        return;
+    }
+
+    const productName = selectedProduct.produto[2]; // Nome do produto
+    const productCode = selectedProduct.produto[4]; // Código do produto
+
+    try {
+        const response = await axios.post('https://parseapi.back4app.com/classes/Produtos', {
+            nome: fullName,
+            cpf: cpf,
+            email: email,
+            empresa: company,
+            endereco: address,
+            produto: productName, // Salva o nome do produto
+            codigo_produto: productCode, // Salva o código do produto
+            ean: selectedProduct.produto[1],
+            tipo: selectedProduct.produto[3],
+            status: 'Vendido'
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Parse-Application-Id': '1WzazzMciNH2dmPTjfGrSXOt4tVMsLp849DtX6YU',
+                'X-Parse-REST-API-Key': 'QCmYv8iVNOkHYkRh6Cvd00XfBZ7PkVeowrpsEgrU'
             }
+        });
 
-            try {
-                const reservationData = {
-                    nome: fullName,
-                    cpf: cpf,
-                    email: email,
-                    empresa: company,
-                    endereco: address,
-                    ean: selectedProduct.produto[1],
-                    status: 'Vendido'
-                };
+        markAsSold(selectedProduct.produto[1]);
+        closeModal();
+        showSuccessModal(productName, productCode);
+    } catch (error) {
+        console.error('Erro ao enviar reserva:', error);
+        alert('Erro ao enviar reserva. Por favor, tente novamente.');
+    }
+}
 
-                await axios.post('https://parseapi.back4app.com/classes/Produtos', reservationData, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Parse-Application-Id': '1WzazzMciNH2dmPTjfGrSXOt4tVMsLp849DtX6YU',
-                        'X-Parse-REST-API-Key': 'QCmYv8iVNOkHYkRh6Cvd00XfBZ7PkVeowrpsEgrU'
-                    }
-                });
-
-                closeModal();
-                document.getElementById('successModal').style.display = 'block';
-
-                // Atualize o estado do produto localmente sem recarregar todos os dados
-                const card = selectedProduct.card;
-                const soldText = document.createElement('p');
-                soldText.className = 'sold';
-                soldText.textContent = 'Vendido';
-                card.querySelector('.button-container').innerHTML = '';
-                card.querySelector('.button-container').appendChild(soldText);
-
-            } catch (error) {
-                console.error('Erro ao reservar o produto:', error);
-                alert('Erro ao reservar o produto. Por favor, tente novamente.');
-            }
-        }
 
         function fillTipoFilter() {
             // Função para preencher o filtro de tipo com os tipos de produtos únicos
