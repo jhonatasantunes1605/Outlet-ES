@@ -103,6 +103,18 @@
                 alert('Erro ao buscar dados da planilha. Por favor, tente novamente.');
             }
         }
+        function populateCategoryOptions(produtos) {
+            const uniqueCategories = Array.from(new Set(produtos.map(produto => produto[3]))); // Column 3 contains categories
+            const tipoSelect = document.getElementById('tipoSelect');
+            
+            // Clear previous options and add new ones
+            tipoSelect.innerHTML = '<option value="Todos">Todos</option>';
+            uniqueCategories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                tipoSelect.appendChild(option);
+            });
 
         // Handle pagination and display of products
         function updatePagination(products, page) {
