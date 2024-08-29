@@ -325,10 +325,9 @@
             produto: selectedProduct.produto[2],
             ean: selectedProduct.produto[1],
             tipo: selectedProduct.produto[3],
-            codigo: selectedProduct.produto[4],
+            codigo: selectedProduct.produto[4], // Código do produto
             preco: selectedProduct.produto[7], // Adiciona o preço aqui
             status: 'Vendido'
-        
         }, {
             headers: {
                 'Content-Type': 'application/json',
@@ -337,10 +336,10 @@
             }
         });
 
-        markAsSold(selectedProduct.produto[1]);
+        // Atualiza o status do produto na UI
+        markAsSold(selectedProduct.produto[4]); // Usar código para marcar como vendido
         closeModal();
 
-        console.log('Chamada da função showSuccessModal');
         showSuccessModal(selectedProduct.produto[2], selectedProduct.produto[4]);
     } catch (error) {
         console.error('Erro ao enviar reserva:', error);
@@ -351,6 +350,25 @@
         // Function to mark a product as sold
          // Function to mark a product as sold
         function markAsSold(codigo) {
+    const container = document.getElementById('container');
+    const card = Array.from(container.getElementsByClassName('card')).find(card => {
+        return card.querySelector('p') && card.querySelector('p').textContent.includes(`Código: ${codigo}`);
+    });
+
+    if (card) {
+        // Remove the reserve button and add "Vendido" label
+        const buttonContainer = card.querySelector('.button-container');
+        if (buttonContainer) {
+            buttonContainer.innerHTML = ''; // Clear existing buttons
+        }
+        
+        const soldText = document.createElement('p');
+        soldText.className = 'sold';
+        soldText.textContent = 'Vendido';
+        card.appendChild(soldText);
+    }
+
+    // Update the filteredProducts array to ensure the product is marked as sold
     const soldProduct = filteredProducts.find(prod => prod[4] === codigo); // Check by "codigo"
     if (soldProduct) {
         soldProduct[6] = 'Vendido'; // Atualiza o status localmente para evitar múltiplas reservas
