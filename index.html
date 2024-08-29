@@ -29,6 +29,23 @@
     <div class="container" id="container"></div>
     <div class="pagination" id="pagination"></div>
 
+    <!-- Terms and Conditions Modal -->
+    <div class="modal" id="termsModal">
+        <div class="modal-content">
+            <h2>Termos e Condições</h2>
+            <p>Leia os termos e condições para prosseguir com a reserva do produto.</p>
+            <p>Ao continuar, você concorda com os seguintes termos:</p>
+            <ul>
+                <li>Termo 1: Detalhes do termo...</li>
+                <li>Termo 2: Detalhes do termo...</li>
+                <!-- Adicione mais termos conforme necessário -->
+            </ul>
+            <button onclick="acceptTerms()">Aceitar e Continuar</button>
+            <button onclick="closeTermsModal()">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- Reservation Modal -->
     <div class="modal" id="reservationModal">
         <div class="modal-content">
             <h2>Reservar Produto</h2>
@@ -42,6 +59,7 @@
         </div>
     </div>
 
+    <!-- Success Modal -->
     <div class="modal" id="successModal">
         <div class="modal-content">
             <h2>Produto outlet reservado com sucesso!</h2>
@@ -52,7 +70,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- For the search icon -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <script>
         let currentPage = 1;
         const itemsPerPage = 8;
@@ -244,9 +262,25 @@
         }
 
         // Open modal for product reservation
+       function openTermsModal() {
+            document.getElementById('termsModal').style.display = 'block';
+        }
+
+        // Função para aceitar os termos e continuar para o modal de reserva
+        function acceptTerms() {
+            closeTermsModal(); // Fecha o modal de termos
+            document.getElementById('reservationModal').style.display = 'block'; // Abre o modal de reserva
+        }
+
+        // Função para fechar o modal de termos
+        function closeTermsModal() {
+            document.getElementById('termsModal').style.display = 'none';
+        }
+
+        // Ajuste na função de abertura do modal de reserva para abrir o modal de termos
         function openModal(produto, card) {
             selectedProduct = { produto, card };
-            document.getElementById('reservationModal').style.display = 'block';
+            openTermsModal(); // Abre o modal de termos ao invés de abrir o modal de reserva diretamente
         }
 
         // Close reservation modal
@@ -322,6 +356,7 @@
             whatsappLink.href = `https://api.whatsapp.com/send?phone=47984979368&text=${encodeURIComponent(message)}`;
             modal.style.display = 'block';
         }
+        
 
         // Fetch products on page load
         document.addEventListener('DOMContentLoaded', () => {
