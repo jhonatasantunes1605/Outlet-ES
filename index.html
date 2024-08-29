@@ -252,33 +252,47 @@
         function closeSuccessModal() {
             document.getElementById('successModal').style.display = 'none';
         }
+        
+function markAsSold(ean) {
+    // Localiza o card do produto e atualiza o status para 'Vendido'
+    const card = selectedProduct.card;
+    const buttonContainer = card.querySelector('.button-container');
+    buttonContainer.innerHTML = '';
 
-        async function submitReservation() {
+    const soldText = document.createElement('p');
+    soldText.className = 'sold';
+    soldText.textContent = 'Vendido';
+    buttonContainer.appendChild(soldText);
+
+    const situacao = card.querySelector('p:nth-child(5)');
+    situacao.textContent = 'Situação: Vendido';
+}
+
+// Função para enviar a reserva do produto
+async function submitReservation() {
     const fullName = document.getElementById('fullName').value;
     const cpf = document.getElementById('cpf').value;
     const email = document.getElementById('email').value;
     const company = document.getElementById('company').value;
     const address = document.getElementById('address').value;
 
-    // Verifica se todos os campos obrigatórios foram preenchidos
     if (!fullName || !cpf || !email || !company || !address) {
         alert('Por favor, preencha todos os campos.');
         return;
     }
 
     try {
-        // Envia os dados da reserva para o banco de dados
         const response = await axios.post('https://parseapi.back4app.com/classes/Produtos', {
             nome: fullName,
             cpf: cpf,
             email: email,
             empresa: company,
             endereco: address,
-            produto: selectedProduct.produto[2], // Nome do produto
-            ean: selectedProduct.produto[1], // Código do produto (EAN)
-            tipo: selectedProduct.produto[3], // Tipo do produto
-            codigo: selectedProduct.produto[4], // Código interno do produto
-            status: 'Vendido' // Marca o status do produto como "Vendido"
+            produto: selectedProduct.produto[2],
+            ean: selectedProduct.produto[1],
+            tipo: selectedProduct.produto[3],
+            codigo: selectedProduct.produto[4],
+            status: 'Vendido'
         }, {
             headers: {
                 'Content-Type': 'application/json',
@@ -287,7 +301,7 @@
             }
         });
 
-        // Marca o produto como vendido na interface e exibe o modal de sucesso
+        // Chama a função markAsSold para atualizar a interface
         markAsSold(selectedProduct.produto[1]);
         closeModal();
         showSuccessModal(selectedProduct.produto[2], selectedProduct.produto[4]);
