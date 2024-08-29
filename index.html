@@ -156,66 +156,80 @@
         }
 
         function createProductCard(produto) {
-            const card = document.createElement('div');
-            card.className = 'card';
+    const card = document.createElement('div');
+    card.className = 'card';
 
-            const nome = document.createElement('h2');
-            nome.textContent = produto[2];
-            card.appendChild(nome);
+    const nome = document.createElement('h2');
+    nome.textContent = produto[2];
+    card.appendChild(nome);
 
-            const ean = document.createElement('p');
-            ean.textContent = `EAN: ${produto[1]}`;
-            card.appendChild(ean);
+    const ean = document.createElement('p');
+    ean.textContent = `EAN: ${produto[1]}`;
+    card.appendChild(ean);
 
-            const tipoElement = document.createElement('p');
-            tipoElement.textContent = `Tipo: ${produto[3]}`;
-            card.appendChild(tipoElement);
+    const tipoElement = document.createElement('p');
+    tipoElement.textContent = `Tipo: ${produto[3]}`;
+    card.appendChild(tipoElement);
 
-            const codigo = document.createElement('p');
-            codigo.textContent = `Código: ${produto[4]}`;
-            card.appendChild(codigo);
+    const codigo = document.createElement('p');
+    codigo.textContent = `Código: ${produto[4]}`;
+    card.appendChild(codigo);
 
-            const situacao = document.createElement('p');
-            situacao.textContent = `Situação: ${produto[5]}`;
-            card.appendChild(situacao);
+    const situacao = document.createElement('p');
+    situacao.textContent = `Situação: ${produto[5]}`;
+    card.appendChild(situacao);
 
-            const imagem = document.createElement('img');
-            imagem.src = produto[9];
-            imagem.alt = `Imagem do ${produto[2]}`;
-            card.appendChild(imagem);
+    const imagem = document.createElement('img');
+    imagem.src = produto[9];
+    imagem.alt = `Imagem do ${produto[2]}`;
+    card.appendChild(imagem);
 
-            const valor = document.createElement('p');
-            valor.className = 'price';
-            valor.textContent = `${produto[7]}`;
-            card.appendChild(valor);
+    const valor = document.createElement('p');
+    valor.className = 'price';
+    valor.textContent = `${produto[7]}`;
+    card.appendChild(valor);
 
-            const buttonContainer = document.createElement('div');
-            buttonContainer.className = 'button-container';
+    // Adiciona as estrelas de classificação do produto
+    const ratingContainer = document.createElement('div');
+    ratingContainer.className = 'rating';
+    const rating = parseInt(produto[11]) || 0; // Assumindo que a classificação está na coluna 12 (índice 11)
 
-            if (produto[6] === 'Vendido') {
-                const soldText = document.createElement('p');
-                soldText.className = 'sold';
-                soldText.textContent = 'Vendido';
-                buttonContainer.appendChild(soldText);
-            } else {
-                const reservarButton = document.createElement('button');
-                reservarButton.textContent = 'Reservar';
-                reservarButton.onclick = () => openModal(produto, card);
-                buttonContainer.appendChild(reservarButton);
-            }
+    for (let i = 1; i <= 5; i++) {
+        const star = document.createElement('span');
+        star.className = i <= rating ? 'fa fa-star checked' : 'fa fa-star';
+        ratingContainer.appendChild(star);
+    }
 
-            // Add Super Promoção badge if marked as "SIM" in column K
-            if (produto[10] === 'SIM') {
-                const superPromoBadge = document.createElement('div');
-                superPromoBadge.className = 'super-promo-badge';
-                superPromoBadge.textContent = 'Super Promoção';
-                card.appendChild(superPromoBadge);
-            }
+    card.appendChild(ratingContainer);
 
-            card.appendChild(buttonContainer);
+    const buttonContainer = document.createElement('div');
+    buttonContainer.className = 'button-container';
 
-            return card;
-        }
+    if (produto[6] === 'Vendido') {
+        const soldText = document.createElement('p');
+        soldText.className = 'sold';
+        soldText.textContent = 'Vendido';
+        buttonContainer.appendChild(soldText);
+    } else {
+        const reservarButton = document.createElement('button');
+        reservarButton.textContent = 'Reservar';
+        reservarButton.onclick = () => openModal(produto, card);
+        buttonContainer.appendChild(reservarButton);
+    }
+
+    // Add Super Promoção badge if marked as "SIM" in column K
+    if (produto[10] === 'SIM') {
+        const superPromoBadge = document.createElement('div');
+        superPromoBadge.className = 'super-promo-badge';
+        superPromoBadge.textContent = 'Super Promoção';
+        card.appendChild(superPromoBadge);
+    }
+
+    card.appendChild(buttonContainer);
+
+    return card;
+}
+
 
         function handleFilterChange() {
             const selectedTipo = document.getElementById('tipoSelect').value;
