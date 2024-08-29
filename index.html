@@ -217,6 +217,14 @@
             }
 
             card.appendChild(buttonContainer);
+
+            // Add star indicator based on column L
+    if (produto[11]) {
+        const starIndicator = document.createElement('div');
+        starIndicator.className = 'star-indicator';
+        starIndicator.textContent = '⭐'.repeat(parseInt(produto[11])); // Adjust the number of stars based on column L
+        card.appendChild(starIndicator);
+    }
             return card;
         }
 
