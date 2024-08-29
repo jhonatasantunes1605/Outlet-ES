@@ -304,48 +304,49 @@
 
         // Function to submit the reservation
         async function submitReservation() {
-            const fullName = document.getElementById('fullName').value;
-            const cpf = document.getElementById('cpf').value;
-            const email = document.getElementById('email').value;
-            const company = document.getElementById('company').value;
-            const address = document.getElementById('address').value;
+    const fullName = document.getElementById('fullName').value;
+    const cpf = document.getElementById('cpf').value;
+    const email = document.getElementById('email').value;
+    const company = document.getElementById('company').value;
+    const address = document.getElementById('address').value;
 
-            if (!fullName || !cpf || !email || !company || !address) {
-                alert('Por favor, preencha todos os campos.');
-                return;
+    if (!fullName || !cpf || !email || !company || !address) {
+        alert('Por favor, preencha todos os campos.');
+        return;
+    }
+
+    try {
+        const response = await axios.post('https://parseapi.back4app.com/classes/Produtos', {
+            nome: fullName,
+            cpf: cpf,
+            email: email,
+            empresa: company,
+            endereco: address,
+            produto: selectedProduct.produto[2],
+            ean: selectedProduct.produto[1],
+            tipo: selectedProduct.produto[3],
+            codigo: selectedProduct.produto[4],
+            preco: selectedProduct.produto[7], // Adiciona o preço aqui
+            status: 'Vendido'
+        
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Parse-Application-Id': '1WzazzMciNH2dmPTjfGrSXOt4tVMsLp849DtX6YU',
+                'X-Parse-REST-API-Key': 'QCmYv8iVNOkHYkRh6Cvd00XfBZ7PkVeowrpsEgrU'
             }
+        });
 
-            try {
-                const response = await axios.post('https://parseapi.back4app.com/classes/Produtos', {
-                    nome: fullName,
-                    cpf: cpf,
-                    email: email,
-                    empresa: company,
-                    endereco: address,
-                    produto: selectedProduct.produto[2],
-                    ean: selectedProduct.produto[1],
-                    tipo: selectedProduct.produto[3],
-                    codigo: selectedProduct.produto[4],
-                    status: 'Vendido'
-                
-                }, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Parse-Application-Id': '1WzazzMciNH2dmPTjfGrSXOt4tVMsLp849DtX6YU',
-                        'X-Parse-REST-API-Key': 'QCmYv8iVNOkHYkRh6Cvd00XfBZ7PkVeowrpsEgrU'
-                    }
-                });
+        markAsSold(selectedProduct.produto[1]);
+        closeModal();
 
-                markAsSold(selectedProduct.produto[1]);
-                closeModal();
-
-                console.log('Chamada da função showSuccessModal');
-                showSuccessModal(selectedProduct.produto[2], selectedProduct.produto[4]);
-            } catch (error) {
-                console.error('Erro ao enviar reserva:', error);
-                alert('Erro ao enviar reserva. Por favor, tente novamente.');
-            }
-        }
+        console.log('Chamada da função showSuccessModal');
+        showSuccessModal(selectedProduct.produto[2], selectedProduct.produto[4]);
+    } catch (error) {
+        console.error('Erro ao enviar reserva:', error);
+        alert('Erro ao enviar reserva. Por favor, tente novamente.');
+    }
+}
 
         // Function to mark a product as sold
         function markAsSold(ean) {
