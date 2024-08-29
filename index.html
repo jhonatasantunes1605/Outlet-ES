@@ -349,13 +349,19 @@
 }
 
         // Function to mark a product as sold
-        function markAsSold(ean) {
-            const soldProduct = filteredProducts.find(prod => prod[1] === ean);
-            if (soldProduct) {
-                soldProduct[6] = 'Vendido'; // Atualiza o status localmente para evitar múltiplas reservas
-            }
-            updatePagination(filteredProducts, currentPage); // Atualiza a lista de produtos na página atual
+        function markAsSold(codigo) {
+    // Atualiza o status localmente para evitar múltiplas reservas
+    filteredProducts = filteredProducts.map(prod => {
+        if (prod[4] === codigo) { // Verifica o código do item (assumindo que o código está na posição 4)
+            return { ...prod, [6]: 'Vendido' }; // Marca apenas o produto específico como vendido
         }
+        return prod;
+    });
+
+    // Atualiza a visualização da lista de produtos na página atual
+    updatePagination(filteredProducts, currentPage); 
+}
+
 
         // Function to show the success modal with WhatsApp link
         function showSuccessModal(productName, productCode) {
