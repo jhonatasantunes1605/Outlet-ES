@@ -50,13 +50,14 @@ header {
 
 .filters select,
 .filters input {
-    padding: 10px 1px; /* Ajuste do padding */
-    border-radius: 20px; /* Bordas mais arredondadas para um visual moderno */
+    padding: 10px 20px; /* Aumenta o padding para um espaçamento maior */
+    border-radius: 8px; /* Bordas mais quadradas, mas ainda arredondadas */
     border: none; /* Remoção da borda padrão */
     background-color: #383838; /* Cor de fundo moderna */
     color: #ffffff; /* Cor do texto */
     font-size: 14px;
     transition: background-color 0.3s, box-shadow 0.3s; /* Transições suaves */
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3); /* Adiciona uma leve sombra interna */
 }
 
 .filters select:focus,
