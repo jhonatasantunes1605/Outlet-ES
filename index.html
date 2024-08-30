@@ -138,7 +138,8 @@
 
 
 
-       function populateCategoryOptions(produtos) {
+
+      function populateCategoryOptions(produtos) {
     const uniqueCategories = Array.from(new Set(produtos.map(produto => produto[3]))); // Column 3 contains categories
     const tipoSelect = document.getElementById('tipoSelect');
     
@@ -151,9 +152,10 @@
         tipoSelect.appendChild(option);
     });
     
-    // Set the current value of tipoSelect to maintain the selected filter
+    // Ensure the selected value is preserved
     tipoSelect.value = tipoSelect.value || 'Todos'; // Default to 'Todos' if no selection
 }
+
 
 
         // Handle pagination and display of products
