@@ -405,10 +405,11 @@ function handleSearch() {
             modal.style.display = 'block';
         }
         
-
-         
+          // Fetch products on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchProdutos('Todos', '', '');
         });
-
+       
     </script>
 </body>
 </html>
