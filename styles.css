@@ -4,17 +4,17 @@ body {
     background-color: #121212;
     color: #e0e0e0;
     margin: 0;
-    padding-top: 120px; /* Ajuste para dar espaço ao cabeçalho */
+    padding-top: 100px; /* Ajuste conforme necessário para dar espaço ao cabeçalho */
 }
 
 /* Cabeçalho */
 header {
     background-color: #282828; /* Cor de fundo moderna */
     color: #fff;
-    padding: 20px 80px; /* Padding ajustado para um visual mais equilibrado */
+    padding: 60px 80px; /* Redução do padding para um visual mais compacto */
     display: flex;
-    flex-direction: column; /* Organiza os itens em uma coluna */
-    align-items: center; /* Alinha os itens ao centro */
+    justify-content: space-between;
+    align-items: center;
     position: fixed;
     top: 0;
     left: 0;
@@ -23,11 +23,9 @@ header {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra mais suave */
 }
 
-/* Logo */
 .logo {
     display: flex;
     align-items: center;
-    margin-bottom: 10px; /* Espaçamento abaixo do logo */
 }
 
 .logo img {
@@ -38,16 +36,8 @@ header {
 
 .title {
     font-size: 24px;
-    margin: 0; /* Removido margin superior */
+    margin-top: 5px;
     color: #fff;
-}
-
-/* Filtros e barra de busca */
-.filters {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center; /* Centraliza os filtros */
-    gap: 15px; /* Espaçamento entre os filtros */
 }
 
 .filters select,
@@ -80,6 +70,7 @@ header {
     padding: 10px 20px;
     cursor: pointer;
     font-size: 14px;
+    margin: 5px;
     transition: background-color 0.3s, transform 0.3s;
 }
 
@@ -95,7 +86,7 @@ header {
     }
 
     .logo img {
-        width: 50px; /* Redimensione o logo para telas menores */
+        width: 60px; /* Redimensione o logo para telas menores */
     }
 
     .title {
@@ -104,7 +95,8 @@ header {
 
     .filters {
         flex-direction: column; /* Organize os filtros verticalmente */
-        align-items: stretch; /* Alinhe os filtros para ocupar toda a largura disponível */
+        align-items: flex-start; /* Alinhe os filtros à esquerda */
+        margin-top: 10px; /* Espaçamento acima dos filtros */
     }
 
     .filters select,
@@ -306,14 +298,4 @@ footer {
     max-width: 400px;
     text-align: center;
     border-radius: 15px;
-}
-
-#successModal .modal-content a {
-    color: #18c237;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-#successModal .modal-content a:hover {
-    text-decoration: underline;
 }
