@@ -11,7 +11,7 @@ body {
 header {
     background-color: #282828; /* Cor de fundo moderna */
     color: #fff;
-    padding: 60px 80px; /* Redução do padding para um visual mais compacto */
+    padding: 20px 30px; /* Ajuste o padding conforme necessário */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -40,8 +40,14 @@ header {
     color: #fff;
 }
 
-.filters select,
-.filters input {
+/* Barra de Busca */
+.search-bar {
+    flex: 1;
+    margin-left: 20px;
+}
+
+.search-bar input {
+    width: 100%;
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #444;
@@ -51,15 +57,41 @@ header {
     transition: background-color 0.3s, box-shadow 0.3s;
 }
 
-.filters select:focus,
-.filters input:focus {
+.search-bar input:focus {
     outline: none;
     background-color: #505050;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
 }
 
-.filters select {
-    min-width: 150px;
+/* Menu de Filtros */
+.filters {
+    display: none; /* Inicialmente escondido */
+    flex-direction: column;
+    align-items: flex-start;
+    background-color: #282828;
+    padding: 10px;
+    border-radius: 5px;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 101;
+}
+
+.filters.active {
+    display: flex; /* Exibe o menu quando ativo */
+}
+
+.filters select,
+.filters input {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #444;
+    background-color: #383838;
+    color: #ffffff;
+    font-size: 14px;
+    margin-bottom: 10px;
 }
 
 .filters button {
@@ -70,7 +102,6 @@ header {
     padding: 10px 20px;
     cursor: pointer;
     font-size: 14px;
-    margin: 5px;
     transition: background-color 0.3s, transform 0.3s;
 }
 
@@ -93,16 +124,18 @@ header {
         font-size: 20px; /* Reduza o tamanho do título para telas menores */
     }
 
-    .filters {
-        flex-direction: column; /* Organize os filtros verticalmente */
-        align-items: flex-start; /* Alinhe os filtros à esquerda */
-        margin-top: 10px; /* Espaçamento acima dos filtros */
+    .search-bar {
+        margin-left: 0;
     }
 
-    .filters select,
-    .filters input {
-        width: 100%; /* Garanta que os elementos ocupem a largura total */
-        margin: 5px 0; /* Ajuste o espaçamento entre os elementos */
+    .search-bar input {
+        width: calc(100% - 20px); /* Ajuste a largura para dispositivos móveis */
+    }
+
+    .filters {
+        width: 100%; /* Ajuste a largura para dispositivos móveis */
+        padding: 5px;
+        position: static; /* Torna o menu de filtros estático para dispositivos móveis */
     }
 }
 
@@ -116,7 +149,7 @@ header {
 }
 
 .card {
-    position: relative; /* Ensure the card is positioned relative to its container */
+    position: relative;
     background-color: #ffffff; /* Cor de fundo branco */
     border-radius: 10px;
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* Sombra mais pronunciada para efeito de flutuação */
@@ -298,4 +331,14 @@ footer {
     max-width: 400px;
     text-align: center;
     border-radius: 15px;
+}
+
+#successModal .modal-content a {
+    color: #18c237;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#successModal .modal-content a:hover {
+    text-decoration: underline;
 }
