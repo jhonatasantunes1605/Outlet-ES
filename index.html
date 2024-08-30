@@ -113,9 +113,9 @@
         filteredProducts = produtos.filter(produto => {
             const nomeProduto = produto[2].toLowerCase();
             const searchQueryLower = searchQuery.toLowerCase();
-            const isSold = soldMap.get(produto[4]) === 'Vendido'; // Check by "codigo"
+            const isSold = soldMap.get(produto[4]) === 'Vendido'; // Use "codigo" instead of "ean"
             produto[6] = isSold ? 'Vendido' : produto[6];
-            return produto[6] === "ADICIONADO PARA VENDA" &&
+            return (produto[6] === "ADICIONADO PARA VENDA") &&
                    (selectedTipo === 'Todos' || produto[3] === selectedTipo) &&
                    nomeProduto.includes(searchQueryLower);
         });
@@ -126,6 +126,7 @@
         } else if (priceSort === 'promo') {
             filteredProducts = filteredProducts.filter(produto => produto[10] === 'SIM');
         }
+
         populateCategoryOptions(allProducts);
         updatePagination(filteredProducts, page);
     } catch (error) {
@@ -133,19 +134,21 @@
         alert('Erro ao buscar dados da planilha. Por favor, tente novamente.');
     }
 }
+
         function populateCategoryOptions(produtos) {
-            const uniqueCategories = Array.from(new Set(produtos.map(produto => produto[3]))); // Column 3 contains categories
-            const tipoSelect = document.getElementById('tipoSelect');
-            
-            // Clear previous options and add new ones
-            tipoSelect.innerHTML = '<option value="Todos">Todos</option>';
-            uniqueCategories.forEach(category => {
-                const option = document.createElement('option');
-                option.value = category;
-                option.textContent = category;
-                tipoSelect.appendChild(option);
-            });
-             }
+    const uniqueCategories = Array.from(new Set(produtos.map(produto => produto[3]))); // Column 3 contains categories
+    const tipoSelect = document.getElementById('tipoSelect');
+    
+    // Clear previous options and add new ones
+    tipoSelect.innerHTML = '<option value="Todos">Todos</option>';
+    uniqueCategories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        tipoSelect.appendChild(option);
+    });
+}
+
 
         // Handle pagination and display of products
         function updatePagination(products, page) {
@@ -257,18 +260,19 @@
 
         // Filter and search handlers
         function handleFilterChange() {
-            const selectedTipo = document.getElementById('tipoSelect').value;
-            const searchQuery = document.getElementById('searchInput').value;
-            const priceSort = document.getElementById('priceSortSelect').value;
-            fetchProdutos(selectedTipo, searchQuery, priceSort, currentPage);
-        }
+    const selectedTipo = document.getElementById('tipoSelect').value;
+    const searchQuery = document.getElementById('searchInput').value;
+    const priceSort = document.getElementById('priceSortSelect').value;
+    fetchProdutos(selectedTipo, searchQuery, priceSort, currentPage);
+}
 
-        function handleSearch() {
-            const selectedTipo = document.getElementById('tipoSelect').value;
-            const searchQuery = document.getElementById('searchInput').value;
-            const priceSort = document.getElementById('priceSortSelect').value;
-            fetchProdutos(selectedTipo, searchQuery, priceSort, currentPage);
-        }
+function handleSearch() {
+    const selectedTipo = document.getElementById('tipoSelect').value;
+    const searchQuery = document.getElementById('searchInput').value;
+    const priceSort = document.getElementById('priceSortSelect').value;
+    fetchProdutos(selectedTipo, searchQuery, priceSort, currentPage);
+}
+
 
         // Open modal for product reservation
        function openTermsModal() {
