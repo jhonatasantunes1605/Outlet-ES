@@ -26,7 +26,6 @@ header {
 .logo {
     display: flex;
     align-items: center;
-    
 }
 
 .logo img {
@@ -41,74 +40,44 @@ header {
     color: #fff;
 }
 
-.filters {
-    display: flex;
-    align-items: center; /* Centraliza verticalmente */
-    gap: 20px; /* Espaçamento maior entre os filtros */
-    margin-left: auto; /* Move os filtros mais próximos ao logo */
-}
-
 .filters select,
 .filters input {
-    padding: 10px 20px; /* Aumenta o padding para um espaçamento maior */
-    border-radius: 8px; /* Bordas mais quadradas, mas ainda arredondadas */
-    border: none; /* Remoção da borda padrão */
-    background-color: #383838; /* Cor de fundo moderna */
-    color: #ffffff; /* Cor do texto */
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #444;
+    background-color: #383838;
+    color: #ffffff;
     font-size: 14px;
-    transition: background-color 0.3s, box-shadow 0.3s; /* Transições suaves */
-    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3); /* Adiciona uma leve sombra interna */
+    transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 .filters select:focus,
 .filters input:focus {
-    outline: none; /* Remoção do outline padrão */
-    background-color: #505050; /* Cor de fundo ao focar */
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); /* Sombra ao focar */
+    outline: none;
+    background-color: #505050;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
 }
 
 .filters select {
-    min-width: 150px; /* Largura mínima ajustada */
+    min-width: 150px;
 }
 
-/* Estilos para dispositivos móveis */
-@media (max-width: 600px) {
-    header {
-        padding: 10px; /* Ajuste o padding conforme necessário para dispositivos móveis */
-    }
-
-    .logo img {
-        width: 60px; /* Redimensione o logo para telas menores */
-    }
-
-    .title {
-        font-size: 20px; /* Reduza o tamanho do título para telas menores */
-    }
-
-    .filters {
-        flex-direction: column; /* Organize os filtros verticalmente */
-        align-items: flex-start; /* Alinhe os filtros à esquerda */
-        margin-top: 10px; /* Espaçamento acima dos filtros */
-    }
-
-    .filters select,
-    .filters input {
-        width: 100%; /* Garanta que os elementos ocupem a largura total */
-        margin: 5px 0; /* Ajuste o espaçamento entre os elementos */
-    }
+.filters button {
+    background-color: #008b15;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 5px;
+    transition: background-color 0.3s, transform 0.3s;
 }
 
-.filters select:focus,
-.filters input:focus {
-    outline: none; /* Remoção do outline padrão */
-    background-color: #505050; /* Cor de fundo ao focar */
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); /* Sombra ao focar */
+.filters button:hover {
+    background-color: #18c237;
+    transform: scale(1.05);
 }
-
-.filters select {
-    min-width: 150px; /* Largura mínima ajustada */
-}
-
 
 /* Estilos para dispositivos móveis */
 @media (max-width: 600px) {
@@ -147,36 +116,17 @@ header {
 }
 
 .card {
+    position: relative; /* Ensure the card is positioned relative to its container */
     background-color: #ffffff; /* Cor de fundo branco */
     border-radius: 10px;
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* Sombra mais pronunciada para efeito de flutuação */
-    margin: 40px;
+    margin: 20px;
     padding: 20px;
     width: 250px;
     text-align: center;
     color: #8e8d8d; /* Cor do texto preto */
     transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transições suaves para efeito de flutuação */
 }
-
-/* Star indicator */
-.star-indicator {
-    position: absolute;
-    top: 5px;
-    right: 10px;
-    font-size: 1em;
-    color: gold;
-}
-.super-promo-badge {
-    position: absolute;
-    top: -5px;
-    left: -4px;
-    background-color: #ff9800;
-    color: #fff;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.8em;
-}
-
 
 .card:hover {
     transform: translateY(-10px); /* Move o cartão para cima ao passar o mouse */
@@ -208,41 +158,29 @@ header {
 }
 
 .sold {
-    color: red !important; /* Cor do texto vermelho */
+    color: red;
     font-weight: bold;
     font-size: 30px;
 }
 
-.button-container {
-    margin-top: 10px;
+/* Star indicator */
+.star-indicator {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    font-size: 1em;
+    color: gold;
 }
 
-button {
-    background-color: #008b15;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #18c237;
-}
-
-.sold {
-    color: red;
-    font-weight: bold;
-}
-
-/* Botões de paginação */
-.pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    list-style-type: none;
-    padding: 0;
-    margin: 20px 0;
+.super-promo-badge {
+    position: absolute;
+    top: -5px;
+    left: -4px;
+    background-color: #ff9800;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
 }
 
 /* Botões de paginação */
@@ -274,7 +212,7 @@ button:hover {
 .pagination button:hover {
     background-color: #282828; /* Fundo escuro ao passar o mouse */
     color: #fff; /* Texto branco ao passar o mouse */
-    border-color: #ffffff; /* Borda verde ao passar o mouse */
+    border-color: #fff; /* Borda branca ao passar o mouse */
 }
 
 .pagination .active button {
@@ -360,20 +298,4 @@ footer {
     max-width: 400px;
     text-align: center;
     border-radius: 15px;
-}
-
-#successModal .modal-content a {
-    color: #18c237;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-#successModal .modal-content a:hover {
-    text-decoration: underline;
-}
-
-
-.card {
-    position: relative; /* Ensure the card is positioned relative to its container */
-    /* Other styles */
 }
