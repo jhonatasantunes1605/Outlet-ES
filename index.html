@@ -116,7 +116,6 @@
             const isSold = soldMap.get(produto[4]) === 'Vendido'; // Use "codigo" instead of "ean"
             produto[6] = isSold ? 'Vendido' : produto[6];
             return (selectedTipo === 'Todos' || produto[3] === selectedTipo) &&
-                   (produto[6] === "ADICIONADO PARA VENDA") &&
                    nomeProduto.includes(searchQueryLower);
         });
 
@@ -126,7 +125,7 @@
         } else if (priceSort === 'promo') {
             filteredProducts = filteredProducts.filter(produto => produto[10] === 'SIM');
         }
-
+        
         populateCategoryOptions(allProducts);
         updatePagination(filteredProducts, page);
     } catch (error) {
@@ -151,14 +150,8 @@
         option.textContent = category;
         tipoSelect.appendChild(option);
     });
-    
-    // Ensure the selected value is preserved
-    tipoSelect.value = tipoSelect.value || 'Todos'; // Default to 'Todos' if no selection
 }
-
-
-
-        // Handle pagination and display of products
+    // Handle pagination and display of products
         function updatePagination(products, page) {
             const totalItems = products.length;
             const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -272,18 +265,21 @@
     const searchQuery = document.getElementById('searchInput').value;
     const priceSort = document.getElementById('priceSortSelect').value;
 
-    // Não redefina o campo de filtro, apenas atualize os produtos
     fetchProdutos(selectedTipo, searchQuery, priceSort, currentPage);
+
+    // Atualize o seletor para refletir o filtro aplicado
+    const tipoSelect = document.getElementById('tipoSelect');
+    tipoSelect.value = selectedTipo; // Certifique-se de que o seletor mostra a categoria aplicada
 }
-
-
 
 function handleSearch() {
     const selectedTipo = document.getElementById('tipoSelect').value;
     const searchQuery = document.getElementById('searchInput').value;
     const priceSort = document.getElementById('priceSortSelect').value;
+
     fetchProdutos(selectedTipo, searchQuery, priceSort, currentPage);
 }
+
 
 
         // Open modal for product reservation
