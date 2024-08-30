@@ -406,35 +406,8 @@ function handleSearch() {
         }
         
 
-        // Fetch products on page load
-        document.addEventListener('DOMContentLoaded', function() {
-    const tipoSelect = document.getElementById('tipoSelect');
-    const searchInput = document.getElementById('searchInput');
-    const priceSortSelect = document.getElementById('priceSortSelect');
-
-    tipoSelect.addEventListener('change', function() {
-        const selectedTipo = this.value;
-        const searchQuery = searchInput.value;
-        const priceSort = priceSortSelect.value;
-        
-        fetchProdutos(selectedTipo, searchQuery, priceSort, currentPage);
-    });
-
-    searchInput.addEventListener('input', function() {
-        const searchQuery = this.value;
-        const selectedTipo = tipoSelect.value;
-        const priceSort = priceSortSelect.value;
-        
-        fetchProdutos(selectedTipo, searchQuery, priceSort, currentPage);
-    });
-
-    priceSortSelect.addEventListener('change', function() {
-        const priceSort = this.value;
-        const selectedTipo = tipoSelect.value;
-        const searchQuery = searchInput.value;
-        
-        fetchProdutos(selectedTipo, searchQuery, priceSort, currentPage);
-    });
+         
+        });
 
     </script>
 </body>
