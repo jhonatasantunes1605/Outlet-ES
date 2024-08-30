@@ -137,7 +137,8 @@
 
 
 
-        function populateCategoryOptions(produtos) {
+
+       function populateCategoryOptions(produtos) {
     const uniqueCategories = Array.from(new Set(produtos.map(produto => produto[3]))); // Column 3 contains categories
     const tipoSelect = document.getElementById('tipoSelect');
     
@@ -149,8 +150,10 @@
         option.textContent = category;
         tipoSelect.appendChild(option);
     });
+    
+    // Set the current value of tipoSelect to maintain the selected filter
+    tipoSelect.value = tipoSelect.value || 'Todos'; // Default to 'Todos' if no selection
 }
-
 
 
         // Handle pagination and display of products
@@ -267,11 +270,10 @@
     const searchQuery = document.getElementById('searchInput').value;
     const priceSort = document.getElementById('priceSortSelect').value;
 
-    // Atualize o campo de filtro para exibir a seleção atual
-    document.getElementById('tipoSelect').value = selectedTipo;
-
+    // Não redefina o campo de filtro, apenas atualize os produtos
     fetchProdutos(selectedTipo, searchQuery, priceSort, currentPage);
 }
+
 
 
 function handleSearch() {
