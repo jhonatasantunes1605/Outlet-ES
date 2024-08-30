@@ -43,7 +43,7 @@ header {
 .filters {
     display: flex;
     align-items: center; /* Centraliza verticalmente */
-    gap: 20px; /* Espaçamento maior entre os filtros */
+    gap: 10px; /* Espaçamento maior entre os filtros */
     margin-left: auto; /* Move os filtros mais próximos ao logo */
 }
 
