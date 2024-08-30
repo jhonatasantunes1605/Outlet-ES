@@ -24,6 +24,10 @@
                 <option value="promo">Super Promoção</option>
             </select>
         </div>
+        <!-- Loading Logo -->
+<div class="loading-container" id="loadingContainer">
+    <img src="icons8-carregando_1_.gif" alt="Carregando..." class="loading-logo">
+</div>
         <p class="product-count" id="productCount"></p>
     </header>
     <div class="container" id="container"></div>
@@ -87,8 +91,19 @@
         let allProducts = [];
         let selectedProduct = null;
 
-        // Fetch products and apply filters and sorting
-        async function fetchProdutos(selectedTipo, searchQuery, priceSort, page = 1) {
+        // Mostrar logo de carregamento
+function showLoading() {
+    document.getElementById('loadingContainer').style.visibility = 'visible';
+}
+
+// Esconder logo de carregamento
+function hideLoading() {
+    document.getElementById('loadingContainer').style.visibility = 'hidden';
+}
+
+// Fetch products and apply filters and sorting
+async function fetchProdutos(selectedTipo, searchQuery, priceSort, page = 1) {
+    showLoading(); // Mostra o logo de carregamento
     try {
         const response = await fetch('https://sheets.googleapis.com/v4/spreadsheets/1_ODPEKD1yor2wjFncaYEp7B5CVFmXRuiEwyOjcqOwcM/values/Produtos!A1:L1000?key=AIzaSyAIB-qCRdOAgEJYuPAxNTEsoR2Ijt33-TE');
         const data = await response.json();
@@ -131,8 +146,16 @@
     } catch (error) {
         console.error('Erro ao buscar dados da planilha:', error);
         alert('Erro ao buscar dados da planilha. Por favor, tente novamente.');
+    } finally {
+        hideLoading(); // Esconde o logo de carregamento
     }
 }
+
+// Fetch products on page load
+document.addEventListener('DOMContentLoaded', () => {
+    fetchProdutos('Todos', '', 'default');
+});
+
         function populateCategoryOptions(produtos) {
     const uniqueCategories = Array.from(new Set(produtos.map(produto => produto[3]))); // Column 3 contains categories
     const tipoSelect = document.getElementById('tipoSelect');
