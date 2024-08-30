@@ -42,21 +42,26 @@ header {
 }
 
 
-.filters button {
-    background-color: #008b15;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
+.filters select,
+.filters input {
+    padding: 10px 1px; /* Ajuste do padding */
+    border-radius: 20px; /* Bordas mais arredondadas para um visual moderno */
+    border: none; /* Remoção da borda padrão */
+    background-color: #383838; /* Cor de fundo moderna */
+    color: #ffffff; /* Cor do texto */
     font-size: 14px;
-    margin: 5px;
-    transition: background-color 0.3s, transform 0.3s;
+    transition: background-color 0.3s, box-shadow 0.3s; /* Transições suaves */
 }
 
-.filters button:hover {
-    background-color: #18c237;
-    transform: scale(1.05);
+.filters select:focus,
+.filters input:focus {
+    outline: none; /* Remoção do outline padrão */
+    background-color: #505050; /* Cor de fundo ao focar */
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); /* Sombra ao focar */
+}
+
+.filters select {
+    min-width: 150px; /* Largura mínima ajustada */
 }
 
 
