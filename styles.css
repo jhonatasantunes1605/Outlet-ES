@@ -41,16 +41,61 @@ header {
     color: #fff;
 }
 
+.filters {
+    display: flex;
+    align-items: center; /* Centraliza verticalmente */
+    gap: 20px; /* Espaçamento maior entre os filtros */
+    margin-left: auto; /* Move os filtros mais próximos ao logo */
+}
 
 .filters select,
 .filters input {
-    padding: 10px 1px; /* Ajuste do padding */
-    border-radius: 20px; /* Bordas mais arredondadas para um visual moderno */
+    padding: 10px 20px; /* Aumenta o padding para um espaçamento maior */
+    border-radius: 8px; /* Bordas mais quadradas, mas ainda arredondadas */
     border: none; /* Remoção da borda padrão */
     background-color: #383838; /* Cor de fundo moderna */
     color: #ffffff; /* Cor do texto */
     font-size: 14px;
     transition: background-color 0.3s, box-shadow 0.3s; /* Transições suaves */
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3); /* Adiciona uma leve sombra interna */
+}
+
+.filters select:focus,
+.filters input:focus {
+    outline: none; /* Remoção do outline padrão */
+    background-color: #505050; /* Cor de fundo ao focar */
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); /* Sombra ao focar */
+}
+
+.filters select {
+    min-width: 150px; /* Largura mínima ajustada */
+}
+
+/* Estilos para dispositivos móveis */
+@media (max-width: 600px) {
+    header {
+        padding: 10px; /* Ajuste o padding conforme necessário para dispositivos móveis */
+    }
+
+    .logo img {
+        width: 60px; /* Redimensione o logo para telas menores */
+    }
+
+    .title {
+        font-size: 20px; /* Reduza o tamanho do título para telas menores */
+    }
+
+    .filters {
+        flex-direction: column; /* Organize os filtros verticalmente */
+        align-items: flex-start; /* Alinhe os filtros à esquerda */
+        margin-top: 10px; /* Espaçamento acima dos filtros */
+    }
+
+    .filters select,
+    .filters input {
+        width: 100%; /* Garanta que os elementos ocupem a largura total */
+        margin: 5px 0; /* Ajuste o espaçamento entre os elementos */
+    }
 }
 
 .filters select:focus,
